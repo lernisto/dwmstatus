@@ -30,16 +30,6 @@ void setname(const char *text)
 	XCloseDisplay(dpy);
 }
 
-int slurp(char *buffer,size_t maxlen,const char* filename){
-	FILE* f;
-	size_t cbread;
-	if((f=fopen(filename,"r"))==NULL){
-		return 0;
-	}
-	cbread = fread(buffer,sizeof(char),maxlen,f);
-	fclose(f);
-	return cbread;
-}
 
 int main()
 {
@@ -48,7 +38,6 @@ int main()
 	time_t t;
 	unsigned int wait;
 	size_t b0;
-	size_t b1;
 
 	display_name = getenv("DISPLAY");
 	if (!display_name) {
@@ -67,11 +56,6 @@ int main()
 		if ((b0 = strftime(buffer, BUFFMAX, TIMEFMT, now))== 0) {
 			perror("strftime");
 			exit(100);
-		}
-		b1 = slurp(&buffer[b0],BUFFMAX-b0,sysbat);
-		if(b1>1){
-            // -1 because we want to chomp off the '\n'
-			buffer[b0+b1-1]='\0';
 		}
 		setname(buffer);
 
